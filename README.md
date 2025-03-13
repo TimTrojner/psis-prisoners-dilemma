@@ -9,6 +9,7 @@ U_i = \sum_{t=1}^{T} u_i(t)
 $$
 
 kjer je:
+
 - $U_i$ skupna korist agenta $i$,
 - $T$ število iteracij igre,
 - $u_i(t)$ korist, ki jo agent $i$ doseže v $t$-ti iteraciji.
@@ -59,4 +60,16 @@ Projekt bomo implementirali v štirih razvojnih iteracijah:
 - [ ] **Iteracija 4:** Razvoj lastne strategije, izvedba celovitega turnirja po Axelrodovih principih in optimizacija kode na podlagi rezultatov ter zaključna dokumentacija.
 
 ### Diagram razredov
+
 ![alt text](<UML class.svg>)
+
+### Diagram odločitev primer
+
+![alt text](diagramOdlocitevPrimer.png)
+
+Prikaz s pomočjo tabele:
+
+|               | Jaz molčim                    | Jaz priznam                  |
+| ------------- | ----------------------------- | ---------------------------- |
+| **On molči**  | **Jaz** 1 leto, **On** 1 leto | **Jaz** 0 let, **On** 10 let |
+| **On prizna** | **Jaz** 10 let, **On** 0 let  | **Jaz** 5 let, **On** 5 let  |
