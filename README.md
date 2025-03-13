@@ -33,6 +33,40 @@ Evaluacija rešitev v tem področju se pogosto izvaja z naslednjimi metodami:
 - **Statistična primerjava:** Uporaba statističnih metod za primerjavo rezultatov turnirjev med različnimi strategijami.
 - **Eksperimentalna validacija:** Izvajanje eksperimentov s simulacijami turnirja, kot ga je predlagal Axelrod, in preverjanje hipoteze o prednosti sodelovanja pri večkratnem ponavljanju igre.
 
+## Strategije v igri Prisoner's Dilemma
+
+V igri Prisoner's Dilemma igralci ponavljajo dilemo zapornikov in sprejemajo odločitve o sodelovanju ali izdaji. Različne strategije določajo, kako igralec sprejema odločitve glede na prejšnje poteze nasprotnika. Spodaj so opisane strategije, katere bomo implementirali:
+
+### Tit for Tat (Tit4Tat)
+
+- Strategija začne s sodelovanjem.
+- Nato ponavlja potezo nasprotnika iz prejšnje runde (če je nasprotnik v prejšnji rundi sodeloval, sodeluje tudi Tit4Tat, če je nasprotnik izdal, tudi Tit4Tat izda).
+- Ta strategija nagrajuje sodelovanje in kaznuje izdajo.
+
+### Always Defect (ALL-D)
+
+- Igralec vedno izda ne glede na zgodovino igre.
+- Ta strategija je agresivna in deluje dobro proti sodelovalnim strategijam, vendar je slaba proti drugim strategijam, ki kaznujejo izdajo.
+
+### Random
+
+- Igralec naključno izbira med sodelovanjem in izdajo z določeno verjetnostjo.
+- Ta strategija je nepredvidljiva, vendar lahko deluje slabše proti bolj strateškim nasprotnikom.
+
+### Tester
+
+- Strategija uporablja kombinacijo sodelovanja in izdaje za preizkušanje odziva nasprotnika.
+- Običajno začne s sodelovanjem, nato občasno izda, da preveri, ali nasprotnik kaznuje izdajo.
+- Če nasprotnik še naprej sodeluje kljub izdaji, Tester preklopi na več izdaj.
+
+### JOSS
+
+- Podobna strategiji Tit4Tat, vendar občasno izda, tudi če bi Tit4Tat sicer sodeloval.
+- Običajno ima majhno verjetnost izdaje (npr. 10 %), kar otežuje popolno sodelovanje nasprotnika.
+- Ta strategija je bolj manipulativna, saj izkorišča preveč sodelovalne nasprotnike.
+
+Vsaka strategija ima svoje prednosti in slabosti, odvisno od tega, proti komu igra. Pri ponavljajočih se igrah lahko določene strategije (npr. Tit4Tat) vzpostavijo dolgoročno sodelovanje, medtem ko druge (npr. ALL-D) izkoristijo sodelovalne nasprotnike.
+
 ## Načrt rešitve
 
 Za implementacijo projekta smo pripravili naslednji načrt:
