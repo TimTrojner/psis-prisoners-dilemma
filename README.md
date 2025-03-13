@@ -31,3 +31,32 @@ Evaluacija rešitev v tem področju se pogosto izvaja z naslednjimi metodami:
 - **Analiza stabilnosti:** Preučevanje, katera strategija dosega stabilno ravnovesje (npr. Nashovo ravnovesje - Nash Equilibrium) v iterativni igri.
 - **Statistična primerjava:** Uporaba statističnih metod za primerjavo rezultatov turnirjev med različnimi strategijami.
 - **Eksperimentalna validacija:** Izvajanje eksperimentov s simulacijami turnirja, kot ga je predlagal Axelrod, in preverjanje hipoteze o prednosti sodelovanja pri večkratnem ponavljanju igre.
+
+## Načrt rešitve
+
+Za implementacijo projekta smo pripravili naslednji načrt:
+
+### Izbrana projektna skupina in sodelavci
+
+- **Projektna skupina:** S7
+- **Sodelavci:** Matic Lukežič, Tim Trojner Hlade, Dejan Tominc
+
+### Povezava do repozitorija
+
+- [Git repozitorij projekta](https://github.com/TimTrojner/psis-prisoners-dilemma)
+
+### Izbran programski jezik
+
+- Python
+
+### Opravila in razvojne iteracije
+
+Projekt bomo implementirali v štirih razvojnih iteracijah:
+
+- [ ] **Iteracija 1:** Načrtovanje in postavitev osnovne strukture projekta. V tej fazi bomo definirali osnovne razrede in module za simulacijo igre ter pripravo podatkov za evalvacijo.
+- [ ] **Iteracija 2:** Implementacija osnovnih strategij: ALL-D, RANDOM in TIT-FOR-TAT. V tej fazi bomo zagotovili, da strategije pravilno odločajo glede sodelovanja ali izdaje.
+- [ ] **Iteracija 3:** Implementacija dodatnih strategij: TESTER in JOSS. Prav tako bomo integrirali evalvacijske metode za merjenje uspešnosti strategij preko simulacij.
+- [ ] **Iteracija 4:** Razvoj lastne strategije, izvedba celovitega turnirja po Axelrodovih principih in optimizacija kode na podlagi rezultatov ter zaključna dokumentacija.
+
+### Diagram razredov
+![alt text](<UML class.svg>)
