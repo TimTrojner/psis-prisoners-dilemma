@@ -54,10 +54,11 @@ V igri Prisoner's Dilemma igralci ponavljajo dilemo zapornikov in sprejemajo odl
 - Ta strategija je nepredvidljiva, vendar lahko deluje slabše proti bolj strateškim nasprotnikom.
 
 ### Tester
-
-- Strategija uporablja kombinacijo sodelovanja in izdaje za preizkušanje odziva nasprotnika.
-- Običajno začne s sodelovanjem, nato občasno izda, da preveri, ali nasprotnik kaznuje izdajo.
-- Če nasprotnik še naprej sodeluje kljub izdaji, Tester preklopi na več izdaj.
+- Strategija začne z izdajo, da preveri odziv nasprotnika.
+- V drugem krogu sodeluje, da vidi, kako nasprotnik reagira na začetno izdajo.
+- Če je nasprotnik v drugem krogu kaznoval začetno izdajo (z izdajo), strategija preklopi na tit-for-tat pristop in ponavlja zadnjo potezo nasprotnika.
+- Če nasprotnik ni kaznoval začetne izdaje (je še naprej sodeloval), ga strategija izkorišča z nadaljnjimi izdajami.
+- Ta pristop omogoča testiranje nasprotnikove strategije in prilagajanje lastnega vedenja glede na njegove odzive.
 
 ### JOSS
 
