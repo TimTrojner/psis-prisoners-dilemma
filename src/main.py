@@ -1,12 +1,15 @@
 import numpy as np
 from players.random_player import Random
+from players.random_player import TIT_FOR_TAT
+from players.random_player import ALL_D
+
 from playground import PlayGround
 
 def main():
     print("Welcome to the Prisoner's Dilemma!")
     results = []
     player1 = Random()
-    player2 = Random()
+    player2 = ALL_D()
     game = PlayGround(player1, player2, "Random1", "Random2", num_games=100)
     game.run()
     results.append((game.score_player1, game.score_player2))
