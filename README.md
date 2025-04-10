@@ -108,3 +108,49 @@ Prikaz s pomočjo tabele:
 | ------------- | ----------------------------- | ---------------------------- |
 | **On molči**  | **Jaz** 1 leto, **On** 1 leto | **Jaz** 0 let, **On** 10 let |
 | **On prizna** | **Jaz** 10 let, **On** 0 let  | **Jaz** 5 let, **On** 5 let  |
+
+
+# Prisoner's Dilemma Tournament Results
+
+## Match Results
+
+| Match | Score |
+|-------|-------|
+| Random vs TitForTat | 292 - 292 |
+| Random vs AlwaysDefect | 770 - 230 |
+| Random vs JOSS | 304 - 304 |
+| Random vs Tester | 280 - 280 |
+| TitForTat vs Random | 408 - 408 |
+| TitForTat vs AlwaysDefect | 505 - 495 |
+| TitForTat vs JOSS | 497 - 487 |
+| TitForTat vs Tester | 501 - 491 |
+| AlwaysDefect vs Random | 275 - 725 |
+| AlwaysDefect vs TitForTat | 500 - 500 |
+| AlwaysDefect vs JOSS | 500 - 500 |
+| AlwaysDefect vs Tester | 495 - 505 |
+| JOSS vs Random | 368 - 408 |
+| JOSS vs TitForTat | 496 - 496 |
+| JOSS vs AlwaysDefect | 505 - 495 |
+| JOSS vs Tester | 501 - 491 |
+| Tester vs Random | 413 - 403 |
+| Tester vs TitForTat | 496 - 496 |
+| Tester vs AlwaysDefect | 505 - 495 |
+| Tester vs JOSS | 496 - 496 |
+
+## Results Table (lower score is better)
+
+|              | Random | TitForTat | AlwaysDefect | JOSS  | Tester |
+|--------------|--------|-----------|--------------|-------|--------|
+| Random       | 0.0    | 292.0     | 770.0        | 304.0 | 280.0  |
+| TitForTat    | 408.0  | 0.0       | 505.0        | 497.0 | 501.0  |
+| AlwaysDefect | 275.0  | 500.0     | 0.0          | 500.0 | 495.0  |
+| JOSS         | 368.0  | 496.0     | 505.0        | 0.0   | 501.0  |
+| Tester       | 413.0  | 496.0     | 505.0        | 496.0 | 0.0    |
+
+## Ranking (Average Score)
+
+1. **Random**: 329.20
+2. **AlwaysDefect**: 354.00
+3. **JOSS**: 374.00
+4. **Tester**: 382.00
+5. **TitForTat**: 382.20
