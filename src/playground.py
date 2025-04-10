@@ -14,6 +14,12 @@ class PlayGround(object):
         self.player1, self.player2 = player1, player2
         self.player1_name, self.player2_name = player1_name, player2_name
         self.score_player1, self.score_player2 = 0, 0
+        
+        # Store game-by-game scores for analysis
+        self.player1_score_history = []
+        self.player2_score_history = []
+        self.cumulative_score_p1 = []
+        self.cumulative_score_p2 = []
 
     def play(self, show_choices_and_results: bool = True):
 
@@ -44,6 +50,12 @@ class PlayGround(object):
 
             self.score_player1 += score_p1
             self.score_player2 += score_p2
+
+            # Record scores for this round
+            self.player1_score_history.append(score_p1)
+            self.player2_score_history.append(score_p2)
+            self.cumulative_score_p1.append(self.score_player1)
+            self.cumulative_score_p2.append(self.score_player2)
             return False
 
         return True
@@ -59,10 +71,10 @@ class PlayGround(object):
             return (1, 1)
 
         elif (action_p1 == "defect") and (action_p2 == "cooperate"):
-            return (0, 10)
+            return (0, 20)
 
         elif (action_p1 == "cooperate") and (action_p2 == "defect"):
-            return (10, 0)
+            return (20, 0)
 
         elif (action_p1 == "defect") and (action_p2 == "defect"):
             return (5, 5)
