@@ -1,18 +1,17 @@
-import numpy as np
 from players.base_player import BasePlayer
 
-class Random(BasePlayer):
+class TIT_FOR_TAT(BasePlayer):
     def initial_action(self):
-        return np.random.choice(["cooperate", "defect"])
-
+        # Start by cooperating (classic TitForTat)
+        return "cooperate"
+    
     def get_action(self, opponents_history: list):
-
         if len(opponents_history) == 0:
             action = self.initial_action()
-
         else:
-            action = np.random.choice(["cooperate", "defect"])
-
+            # Copy the opponent's last move
+            action = opponents_history[-1]
+        
         self.past_actions.append(action)
         self.num_games += 1
         return action
