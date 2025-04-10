@@ -1,7 +1,8 @@
-import numpy as np
 from players.random_player import Random
-from players.random_player import TIT_FOR_TAT
-from players.random_player import ALL_D
+from players.t4t import TIT_FOR_TAT
+from players.all_d import ALL_D
+from players.joss import JOSS
+from players.tester import Tester
 
 from playground import PlayGround
 
