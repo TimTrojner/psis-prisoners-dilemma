@@ -1,0 +1,854 @@
+commit 7efba3bb83d08dfc0ea428edf7c3d80a8f50d3bf
+Author: Matic Lukežič <maticlukezic007@gmail.com>
+Date:   Fri Apr 11 11:41:19 2025 +0200
+
+    Add NiceGuy-always cooperate for testing
+
+diff --git a/src/__pycache__/playground.cpython-312.pyc b/src/__pycache__/playground.cpython-312.pyc
+index a242429..8ffaffb 100644
+Binary files a/src/__pycache__/playground.cpython-312.pyc and b/src/__pycache__/playground.cpython-312.pyc differ
+diff --git a/src/cumulative_score_1000_games.png b/src/cumulative_score_1000_games.png
+index 733c64d..de64698 100644
+Binary files a/src/cumulative_score_1000_games.png and b/src/cumulative_score_1000_games.png differ
+diff --git a/src/cumulative_score_100_games.png b/src/cumulative_score_100_games.png
+index 5044c70..cddd448 100644
+Binary files a/src/cumulative_score_100_games.png and b/src/cumulative_score_100_games.png differ
+diff --git a/src/cumulative_score_10_games.png b/src/cumulative_score_10_games.png
+index 2268729..130b26b 100644
+Binary files a/src/cumulative_score_10_games.png and b/src/cumulative_score_10_games.png differ
+diff --git a/src/cumulative_score_500_games.png b/src/cumulative_score_500_games.png
+index 2723798..020c5ad 100644
+Binary files a/src/cumulative_score_500_games.png and b/src/cumulative_score_500_games.png differ
+diff --git a/src/cumulative_score_50_games.png b/src/cumulative_score_50_games.png
+index 555b309..9796d27 100644
+Binary files a/src/cumulative_score_50_games.png and b/src/cumulative_score_50_games.png differ
+diff --git a/src/cumulative_score_5_games.png b/src/cumulative_score_5_games.png
+index 21c5601..077aaef 100644
+Binary files a/src/cumulative_score_5_games.png and b/src/cumulative_score_5_games.png differ
+diff --git a/src/main.py b/src/main.py
+index f041854..94d8944 100644
+--- a/src/main.py
++++ b/src/main.py
+@@ -1,6 +1,7 @@
+ from players.random_player import Random
+ from players.t4t import TIT_FOR_TAT
+ from players.all_d import ALL_D
++from players.niceguy import NICE_GUY
+ from players.joss import JOSS
+ from players.tester import Tester
+ from playground import PlayGround
+@@ -106,7 +107,8 @@ def run_tournament(show_individual_games=False):
+         (TIT_FOR_TAT(), "TitForTat"),
+         (ALL_D(), "AlwaysDefect"),
+         (JOSS(), "JOSS"),
+-        (Tester(), "Tester")
++        (Tester(), "Tester"),
++        (NICE_GUY(), "NiceGuy")
+     ]
+     
+     # Run a range of small and large tournament sizes
+@@ -136,7 +138,8 @@ def run_tournament(show_individual_games=False):
+                 (TIT_FOR_TAT(), "TitForTat"),
+                 (ALL_D(), "AlwaysDefect"),
+                 (JOSS(), "JOSS"),
+-                (Tester(), "Tester")
++                (Tester(), "Tester"),
++                 (NICE_GUY(), "NiceGuy")
+             ]
+             
+             scores, details, strategy_scores_by_game = tournament_round(
+@@ -194,7 +197,8 @@ def visualize_tournament_results(all_tournament_scores, all_tournament_details):
+         'TitForTat': 'green',
+         'AlwaysDefect': 'red',
+         'JOSS': 'purple',
+-        'Tester': 'orange'
++        'Tester': 'orange',
++        'NiceGuy': 'yellow'
+     }
+     
+     # Extract data for plotting
+diff --git a/src/normalized_scores_by_game_count.png b/src/normalized_scores_by_game_count.png
+index 254d58e..99c5e79 100644
+Binary files a/src/normalized_scores_by_game_count.png and b/src/normalized_scores_by_game_count.png differ
+diff --git a/src/players/__pycache__/niceguy.cpython-312.pyc b/src/players/__pycache__/niceguy.cpython-312.pyc
+new file mode 100644
+index 0000000..df6cb74
+Binary files /dev/null and b/src/players/__pycache__/niceguy.cpython-312.pyc differ
+diff --git a/src/players/niceguy.py b/src/players/niceguy.py
+new file mode 100644
+index 0000000..5d07cc8
+--- /dev/null
++++ b/src/players/niceguy.py
+@@ -0,0 +1,14 @@
++from players.base_player import BasePlayer
++
++class NICE_GUY(BasePlayer):
++    def initial_action(self):
++        # Always start by defecting
++        return "cooperate"
++    
++    def get_action(self, opponents_history: list):
++        # Always cooperate regardless of opponent's history
++        action = "cooperate"
++        
++        self.past_actions.append(action)
++        self.num_games += 1
++        return action
+diff --git a/src/strategy_comparison_10000_games.png b/src/strategy_comparison_10000_games.png
+index fad0f21..8480641 100644
+Binary files a/src/strategy_comparison_10000_games.png and b/src/strategy_comparison_10000_games.png differ
+diff --git a/src/strategy_comparison_100_games.png b/src/strategy_comparison_100_games.png
+index ad92939..4354d81 100644
+Binary files a/src/strategy_comparison_100_games.png and b/src/strategy_comparison_100_games.png differ
+diff --git a/src/strategy_comparison_10_games.png b/src/strategy_comparison_10_games.png
+index 1325546..7d23dba 100644
+Binary files a/src/strategy_comparison_10_games.png and b/src/strategy_comparison_10_games.png differ
+diff --git a/src/strategy_convergence.png b/src/strategy_convergence.png
+index a898a9b..efec299 100644
+Binary files a/src/strategy_convergence.png and b/src/strategy_convergence.png differ
+diff --git a/src/strategy_performance_by_game_count.png b/src/strategy_performance_by_game_count.png
+index 948c709..8192ebd 100644
+Binary files a/src/strategy_performance_by_game_count.png and b/src/strategy_performance_by_game_count.png differ
+diff --git a/src/strategy_ranking_by_game_count.png b/src/strategy_ranking_by_game_count.png
+index b197174..33075c9 100644
+Binary files a/src/strategy_ranking_by_game_count.png and b/src/strategy_ranking_by_game_count.png differ
+
+commit a3e6db7d1b6ea6116703dc5f6214c25d326b843e
+Author: Matic Lukežič <maticlukezic007@gmail.com>
+Date:   Thu Apr 10 18:53:47 2025 +0200
+
+    Analyse different lengths of tournaments and plot graphs
+
+diff --git a/requirements.txt b/requirements.txt
+index 3e6a5d7..2c93088 100644
+--- a/requirements.txt
++++ b/requirements.txt
+@@ -1 +1,2 @@
+-numpy==2.2.4
+\ No newline at end of file
++numpy==2.2.4
++pandas==2.2.3
+\ No newline at end of file
+diff --git a/src/__pycache__/playground.cpython-312.pyc b/src/__pycache__/playground.cpython-312.pyc
+index 5679762..a242429 100644
+Binary files a/src/__pycache__/playground.cpython-312.pyc and b/src/__pycache__/playground.cpython-312.pyc differ
+diff --git a/src/cumulative_score_1000_games.png b/src/cumulative_score_1000_games.png
+new file mode 100644
+index 0000000..733c64d
+Binary files /dev/null and b/src/cumulative_score_1000_games.png differ
+diff --git a/src/cumulative_score_100_games.png b/src/cumulative_score_100_games.png
+new file mode 100644
+index 0000000..5044c70
+Binary files /dev/null and b/src/cumulative_score_100_games.png differ
+diff --git a/src/cumulative_score_10_games.png b/src/cumulative_score_10_games.png
+new file mode 100644
+index 0000000..2268729
+Binary files /dev/null and b/src/cumulative_score_10_games.png differ
+diff --git a/src/cumulative_score_500_games.png b/src/cumulative_score_500_games.png
+new file mode 100644
+index 0000000..2723798
+Binary files /dev/null and b/src/cumulative_score_500_games.png differ
+diff --git a/src/cumulative_score_50_games.png b/src/cumulative_score_50_games.png
+new file mode 100644
+index 0000000..555b309
+Binary files /dev/null and b/src/cumulative_score_50_games.png differ
+diff --git a/src/cumulative_score_5_games.png b/src/cumulative_score_5_games.png
+new file mode 100644
+index 0000000..21c5601
+Binary files /dev/null and b/src/cumulative_score_5_games.png differ
+diff --git a/src/main.py b/src/main.py
+index 4568038..f041854 100644
+--- a/src/main.py
++++ b/src/main.py
+@@ -4,10 +4,100 @@ from players.all_d import ALL_D
+ from players.joss import JOSS
+ from players.tester import Tester
+ from playground import PlayGround
+-import pandas as pd
+-import numpy as np
++import matplotlib.pyplot as plt
++
++def tournament_round(strategies, num_games, show_individual_games=False):
++   
++    scores = {name: 0 for _, name in strategies}
++    game_count = 0
++    all_results = []
++    
++    if num_games > 1000:
++        sample_freq = max(1, num_games // 1000)  
++    else:
++        sample_freq = 1
++    
++    # Track cumulative scores by game number for each strategy
++    strategy_scores_by_game = {name: [] for _, name in strategies}
++    
++    # Each strategy plays against every other strategy
++    for i, (strategy1, name1) in enumerate(strategies):
++        for j, (strategy2, name2) in enumerate(strategies):
++            if i >= j:  # Skip duplicate pairings and self-play
++                continue
++            
++            game_count += 1
++            if not show_individual_games:
++                print(f"Game {game_count}: {name1} vs {name2} ({num_games} rounds)")
++            
++            # Reset strategy histories
++            strategy1.__init__()
++            strategy2.__init__()
++            
++            # Create and run the game
++            playground = PlayGround(
++                strategy1, 
++                strategy2, 
++                name1, 
++                name2, 
++                num_games
++            )
++            playground.run(show_choices_and_results=show_individual_games)
++            
++            # Record the results
++            scores[name1] += playground.score_player1
++            scores[name2] += playground.score_player2
++            
++            # For large game counts, sample the cumulative scores at regular intervals
++            if num_games > 1000:
++                sampled_p1 = [playground.cumulative_score_p1[i] for i in range(0, num_games, sample_freq)]
++                sampled_p2 = [playground.cumulative_score_p2[i] for i in range(0, num_games, sample_freq)]
++                game_indices = list(range(0, num_games, sample_freq))
++                
++                # Add the final score if it's not already included
++                if (num_games - 1) % sample_freq != 0:
++                    sampled_p1.append(playground.cumulative_score_p1[-1])
++                    sampled_p2.append(playground.cumulative_score_p2[-1])
++                    game_indices.append(num_games - 1)
++            else:
++                sampled_p1 = playground.cumulative_score_p1
++                sampled_p2 = playground.cumulative_score_p2
++                game_indices = list(range(num_games))
++            
++            # Store detailed results for later analysis
++            all_results.append({
++                'player1': name1,
++                'player2': name2,
++                'score1': playground.score_player1,
++                'score2': playground.score_player2,
++                'cumulative_score_p1': sampled_p1,
++                'cumulative_score_p2': sampled_p2,
++                'game_indices': game_indices
++            })
++            
++            # Update running average scores by game
++            # For large tournaments, we'll only track sampled points
++            for game_idx, p1_score, p2_score in zip(
++                game_indices, 
++                sampled_p1, 
++                sampled_p2
++            ):
++                # Ensure we have enough slots in our arrays
++                while len(strategy_scores_by_game[name1]) <= game_idx:
++                    strategy_scores_by_game[name1].append(0)
++                while len(strategy_scores_by_game[name2]) <= game_idx:
++                    strategy_scores_by_game[name2].append(0)
++                
++                # Add the scores
++                strategy_scores_by_game[name1][game_idx] += p1_score
++                strategy_scores_by_game[name2][game_idx] += p2_score
++    
++    return scores, all_results, strategy_scores_by_game
+ 
+ def run_tournament(show_individual_games=False):
++    """
++    Run multiple tournaments with different numbers of games and analyze the results
++    """
+     print("Welcome to the Prisoner's Dilemma Tournament!")
+     
+     # Define all strategies
+@@ -19,39 +109,238 @@ def run_tournament(show_individual_games=False):
+         (Tester(), "Tester")
+     ]
+     
+-    # Create results matrix
+-    num_strategies = len(strategies)
+-    results = np.zeros((num_strategies, num_strategies))
+-    
+-    # Run tournament
+-    for i, (player1, name1) in enumerate(strategies):
+-        for j, (player2, name2) in enumerate(strategies):
+-            if i != j:  # Don't play against self (or optionally do with i <= j)
+-                # Reset players before each match
+-                player1.reset()
+-                player2.reset()
+-                
+-                # Run the match
+-                game = PlayGround(player1, player2, name1, name2, num_games=100)
+-                game.run(show_choices_and_results=show_individual_games)
++    # Run a range of small and large tournament sizes
++    num_games_options = [5, 10, 50, 100, 500, 1000, 10000]
++    num_tournaments = 3  # Reduced for faster execution
++    
++    # Store results from all tournaments
++    all_tournament_scores = {}
++    all_tournament_details = {}
++    
++    # Run tournaments with different numbers of games
++    for num_games in num_games_options:
++        print(f"\nRunning tournament with {num_games} games per match...")
++        
++        # Run multiple tournaments and average the results
++        avg_scores = {name: 0 for _, name in strategies}
++        tournament_details = []
++        cumulative_scores_by_strategy = {name: [] for _, name in strategies}
++        total_games_played = {name: 0 for _, name in strategies}
++        
++        for t in range(num_tournaments):
++            print(f"Tournament {t+1}/{num_tournaments}")
++            
++            # Create a fresh copy of strategies for each tournament
++            fresh_strategies = [
++                (Random(), "Random"),
++                (TIT_FOR_TAT(), "TitForTat"),
++                (ALL_D(), "AlwaysDefect"),
++                (JOSS(), "JOSS"),
++                (Tester(), "Tester")
++            ]
++            
++            scores, details, strategy_scores_by_game = tournament_round(
++                fresh_strategies, 
++                num_games, 
++                show_individual_games
++            )
++            
++            # Accumulate scores
++            for name in avg_scores:
++                avg_scores[name] += scores[name]
+                 
+-                # Store results (lower score is better)
+-                results[i, j] = game.score_player1
++            tournament_details.append({
++                'scores': scores,
++                'details': details,
++                'strategy_scores_by_game': strategy_scores_by_game
++            })
++            
++            # Track cumulative scores - need to handle variable-length arrays
++            for name, score_history in strategy_scores_by_game.items():
++                # Extend cumulative_scores_by_strategy[name] if needed
++                if len(cumulative_scores_by_strategy[name]) < len(score_history):
++                    cumulative_scores_by_strategy[name].extend([0] * (len(score_history) - len(cumulative_scores_by_strategy[name])))
+                 
+-                print(f"{name1} vs {name2}: {game.score_player1} - {game.score_player2}")
++                # Add scores
++                for i, score in enumerate(score_history):
++                    cumulative_scores_by_strategy[name][i] += score
++                    total_games_played[name] = max(total_games_played[name], i+1)
++        
++        # Average the scores
++        for name in avg_scores:
++            avg_scores[name] /= num_tournaments
++            
++        # Print results
++        print("\nAverage scores after", num_tournaments, "tournaments:")
++        for name, score in sorted(avg_scores.items(), key=lambda x: x[1]):
++            print(f"{name}: {score:.2f} years in prison")
++            
++        # Store for later visualization
++        all_tournament_scores[num_games] = avg_scores
++        all_tournament_details[num_games] = {
++            'tournament_details': tournament_details,
++            'cumulative_scores_by_strategy': cumulative_scores_by_strategy,
++            'total_games_played': total_games_played
++        }
++    
++    # Visualize the results
++    visualize_tournament_results(all_tournament_scores, all_tournament_details)
++
++def visualize_tournament_results(all_tournament_scores, all_tournament_details):
++
++    # Set up a colorful palette for strategies
++    strategy_colors = {
++        'Random': 'blue',
++        'TitForTat': 'green',
++        'AlwaysDefect': 'red',
++        'JOSS': 'purple',
++        'Tester': 'orange'
++    }
++    
++    # Extract data for plotting
++    game_counts = sorted(all_tournament_scores.keys())
++    strategies = list(all_tournament_scores[game_counts[0]].keys())
++    
++    # 1. Performance across different game counts
++    plt.figure(figsize=(12, 8))
++    
++    for strategy in strategies:
++        scores = [all_tournament_scores[count][strategy] for count in game_counts]
++        plt.plot(game_counts, scores, marker='o', label=strategy, color=strategy_colors[strategy], linewidth=2)
++    
++    plt.title('Strategy Performance Across Different Tournament Lengths', fontsize=16)
++    plt.xlabel('Number of Games per Match', fontsize=14)
++    plt.ylabel('Average Years in Prison (Lower is Better)', fontsize=14)
++    plt.xscale('log')  # Use log scale for x-axis to better show differences
++    plt.legend(fontsize=12)
++    plt.grid(True, alpha=0.3)
++    plt.tight_layout()
++    plt.savefig('strategy_performance_by_game_count.png', dpi=300)
++    plt.close()
++    
++    # 2. Performance during a single match (for each game count)
++    for num_games in [g for g in game_counts if g <= 1000]:
++        if num_games not in all_tournament_details:
++            continue
++            
++        plt.figure(figsize=(12, 8))
++        cumulative_data = all_tournament_details[num_games]['cumulative_scores_by_strategy']
++        total_games = all_tournament_details[num_games]['total_games_played']
++        
++        for strategy, scores in cumulative_data.items():
++            # Only plot up to the number of games we actually have data for
++            game_count = total_games[strategy]
++            if game_count > 0:
++                x = range(1, min(len(scores) + 1, game_count + 1))
++                y = scores[:len(x)]
++                plt.plot(x, y, label=strategy, color=strategy_colors[strategy], linewidth=2)
++        
++        plt.title(f'Cumulative Score During {num_games}-Game Tournament', fontsize=16)
++        plt.xlabel('Game Number', fontsize=14)
++        plt.ylabel('Cumulative Years in Prison (Lower is Better)', fontsize=14)
++        if num_games > 100:
++            plt.xscale('log')  # Use log scale for large game counts
++        plt.legend(fontsize=12)
++        plt.grid(True, alpha=0.3)
++        plt.tight_layout()
++        plt.savefig(f'cumulative_score_{num_games}_games.png', dpi=300)
++        plt.close()
++    
++    # 3. Strategy ranking across different game counts
++    plt.figure(figsize=(12, 8))
++    
++    # Calculate ranks (1 is best = lowest prison time)
++    ranks_by_game_count = {}
++    for count in game_counts:
++        scores = all_tournament_scores[count]
++        sorted_strategies = sorted(scores.keys(), key=lambda s: scores[s])
++        ranks = {strategy: i+1 for i, strategy in enumerate(sorted_strategies)}
++        ranks_by_game_count[count] = ranks
++    
++    # Plot ranks
++    for strategy in strategies:
++        ranks = [ranks_by_game_count[count][strategy] for count in game_counts]
++        plt.plot(game_counts, ranks, marker='o', label=strategy, color=strategy_colors[strategy], linewidth=2)
++    
++    plt.title('Strategy Ranking Across Different Tournament Lengths (Lower is Better)', fontsize=16)
++    plt.xlabel('Number of Games per Match', fontsize=14)
++    plt.ylabel('Rank (1 = Best)', fontsize=14)
++    plt.xscale('log')  # Use log scale for x-axis
++    plt.yticks(range(1, len(strategies) + 1))
++    plt.legend(fontsize=12)
++    plt.grid(True, alpha=0.3)
++    plt.tight_layout()
++    plt.savefig('strategy_ranking_by_game_count.png', dpi=300)
++    plt.close()
++    
++    # 4. Bar chart comparing strategy performance for specific game counts
++    for num_games in [10, 100, 10000]:
++        if num_games not in all_tournament_scores:
++            continue
++            
++        plt.figure(figsize=(10, 6))
++        
++        scores = all_tournament_scores[num_games]
++        sorted_items = sorted(scores.items(), key=lambda x: x[1])
++        strategies_sorted = [item[0] for item in sorted_items]
++        scores_sorted = [item[1] for item in sorted_items]
++        
++        bars = plt.bar(strategies_sorted, scores_sorted, color=[strategy_colors[s] for s in strategies_sorted])
++        
++        plt.title(f'Strategy Performance with {num_games} Games per Match', fontsize=16)
++        plt.ylabel('Average Years in Prison (Lower is Better)', fontsize=14)
++        plt.grid(True, alpha=0.3, axis='y')
++        
++        # Add value labels on top of bars
++        for bar in bars:
++            height = bar.get_height()
++            plt.text(bar.get_x() + bar.get_width()/2., height + 0.1,
++                    f'{height:.1f}', ha='center', va='bottom', fontsize=12)
++        
++        plt.tight_layout()
++        plt.savefig(f'strategy_comparison_{num_games}_games.png', dpi=300)
++        plt.close()
++    
++    # 5. Average scores normalized by tournament length
++    plt.figure(figsize=(12, 8))
++    
++    for strategy in strategies:
++        # Calculate average score per game
++        normalized_scores = [all_tournament_scores[count][strategy] / count for count in game_counts]
++        plt.plot(game_counts, normalized_scores, marker='o', label=strategy, color=strategy_colors[strategy], linewidth=2)
++    
++    plt.title('Average Score Per Game Across Tournament Lengths', fontsize=16)
++    plt.xlabel('Number of Games per Match', fontsize=14)
++    plt.ylabel('Avg Years in Prison Per Game (Lower is Better)', fontsize=14)
++    plt.xscale('log')  # Use log scale for x-axis
++    plt.legend(fontsize=12)
++    plt.grid(True, alpha=0.3)
++    plt.tight_layout()
++    plt.savefig('normalized_scores_by_game_count.png', dpi=300)
++    plt.close()
++    
++    # 6. Strategy convergence - at what tournament length does the ranking stabilize?
++    plt.figure(figsize=(14, 10))
++    
++    # Prepare the plot with 5 subplots (one per strategy)
++    fig, axs = plt.subplots(len(strategies), 1, figsize=(12, 3*len(strategies)), sharex=True)
++    fig.suptitle('Strategy Performance Relative to Tournament Length', fontsize=16)
+     
+-    # Create and display results table
+-    strategy_names = [name for _, name in strategies]
+-    results_df = pd.DataFrame(results, index=strategy_names, columns=strategy_names)
++    for i, strategy in enumerate(strategies):
++        y_values = [all_tournament_scores[count][strategy] for count in game_counts]
++        axs[i].plot(game_counts, y_values, marker='o', color=strategy_colors[strategy], linewidth=2)
++        axs[i].set_ylabel('Years in Prison', fontsize=12)
++        axs[i].set_title(f"{strategy}", fontsize=14)
++        axs[i].grid(True, alpha=0.3)
+     
+-    print("\nResults Table (lower score is better):")
+-    print(results_df)
++    axs[-1].set_xlabel('Number of Games per Match', fontsize=14)
++    axs[-1].set_xscale('log')
++    plt.tight_layout()
++    plt.subplots_adjust(top=0.95)
++    plt.savefig('strategy_convergence.png', dpi=300)
++    plt.close()
+     
+-    # Calculate average performance
+-    average_scores = results_df.mean(axis=1).sort_values()
+-    print("\nRanking (Average Score):")
+-    for rank, (name, score) in enumerate(average_scores.items(), 1):
+-        print(f"{rank}. {name}: {score:.2f}")
++    print("\nVisualization complete! All plots have been saved as PNG files.")
+ 
+ def main():
+     run_tournament(show_individual_games=False)  # Set to True to see each move
+diff --git a/src/normalized_scores_by_game_count.png b/src/normalized_scores_by_game_count.png
+new file mode 100644
+index 0000000..254d58e
+Binary files /dev/null and b/src/normalized_scores_by_game_count.png differ
+diff --git a/src/players/__pycache__/all_d.cpython-312.pyc b/src/players/__pycache__/all_d.cpython-312.pyc
+new file mode 100644
+index 0000000..81225c9
+Binary files /dev/null and b/src/players/__pycache__/all_d.cpython-312.pyc differ
+diff --git a/src/players/__pycache__/joss.cpython-312.pyc b/src/players/__pycache__/joss.cpython-312.pyc
+new file mode 100644
+index 0000000..28c26de
+Binary files /dev/null and b/src/players/__pycache__/joss.cpython-312.pyc differ
+diff --git a/src/players/__pycache__/random_player.cpython-312.pyc b/src/players/__pycache__/random_player.cpython-312.pyc
+index 841f412..a260481 100644
+Binary files a/src/players/__pycache__/random_player.cpython-312.pyc and b/src/players/__pycache__/random_player.cpython-312.pyc differ
+diff --git a/src/players/__pycache__/t4t.cpython-312.pyc b/src/players/__pycache__/t4t.cpython-312.pyc
+new file mode 100644
+index 0000000..5dec05d
+Binary files /dev/null and b/src/players/__pycache__/t4t.cpython-312.pyc differ
+diff --git a/src/players/__pycache__/tester.cpython-312.pyc b/src/players/__pycache__/tester.cpython-312.pyc
+new file mode 100644
+index 0000000..47db95c
+Binary files /dev/null and b/src/players/__pycache__/tester.cpython-312.pyc differ
+diff --git a/src/players/joss.py b/src/players/joss.py
+index 5c04b01..538dd28 100644
+--- a/src/players/joss.py
++++ b/src/players/joss.py
+@@ -14,17 +14,9 @@ class JOSS(BasePlayer):
+         if len(opponents_history) == 0:
+             action = self.initial_action()
+         else:
+-            # If opponent defected, always defect
+-            if opponents_history[-1] == "defect":
++            action = opponents_history[-1]
++            if action == "cooperate" and np.random.random() < self.defection_probability:
+                 action = "defect"
+-            else:
+-                # Opponent cooperated
+-                # With probability defection_probability, defect anyway
+-                if np.random.random() < self.defection_probability:
+-                    action = "defect"
+-                else:
+-                    # Otherwise cooperate (follow Tit-for-Tat)
+-                    action = "cooperate"
+         
+         self.past_actions.append(action)
+         self.num_games += 1
+diff --git a/src/playground.py b/src/playground.py
+index f0162ae..e2287b4 100644
+--- a/src/playground.py
++++ b/src/playground.py
+@@ -14,6 +14,12 @@ class PlayGround(object):
+         self.player1, self.player2 = player1, player2
+         self.player1_name, self.player2_name = player1_name, player2_name
+         self.score_player1, self.score_player2 = 0, 0
++        
++        # Store game-by-game scores for analysis
++        self.player1_score_history = []
++        self.player2_score_history = []
++        self.cumulative_score_p1 = []
++        self.cumulative_score_p2 = []
+ 
+     def play(self, show_choices_and_results: bool = True):
+ 
+@@ -44,6 +50,12 @@ class PlayGround(object):
+ 
+             self.score_player1 += score_p1
+             self.score_player2 += score_p2
++
++            # Record scores for this round
++            self.player1_score_history.append(score_p1)
++            self.player2_score_history.append(score_p2)
++            self.cumulative_score_p1.append(self.score_player1)
++            self.cumulative_score_p2.append(self.score_player2)
+             return False
+ 
+         return True
+@@ -59,10 +71,10 @@ class PlayGround(object):
+             return (1, 1)
+ 
+         elif (action_p1 == "defect") and (action_p2 == "cooperate"):
+-            return (0, 10)
++            return (0, 20)
+ 
+         elif (action_p1 == "cooperate") and (action_p2 == "defect"):
+-            return (10, 0)
++            return (20, 0)
+ 
+         elif (action_p1 == "defect") and (action_p2 == "defect"):
+             return (5, 5)
+\ No newline at end of file
+diff --git a/src/strategy_comparison_10000_games.png b/src/strategy_comparison_10000_games.png
+new file mode 100644
+index 0000000..fad0f21
+Binary files /dev/null and b/src/strategy_comparison_10000_games.png differ
+diff --git a/src/strategy_comparison_100_games.png b/src/strategy_comparison_100_games.png
+new file mode 100644
+index 0000000..ad92939
+Binary files /dev/null and b/src/strategy_comparison_100_games.png differ
+diff --git a/src/strategy_comparison_10_games.png b/src/strategy_comparison_10_games.png
+new file mode 100644
+index 0000000..1325546
+Binary files /dev/null and b/src/strategy_comparison_10_games.png differ
+diff --git a/src/strategy_convergence.png b/src/strategy_convergence.png
+new file mode 100644
+index 0000000..a898a9b
+Binary files /dev/null and b/src/strategy_convergence.png differ
+diff --git a/src/strategy_performance_by_game_count.png b/src/strategy_performance_by_game_count.png
+new file mode 100644
+index 0000000..948c709
+Binary files /dev/null and b/src/strategy_performance_by_game_count.png differ
+diff --git a/src/strategy_ranking_by_game_count.png b/src/strategy_ranking_by_game_count.png
+new file mode 100644
+index 0000000..b197174
+Binary files /dev/null and b/src/strategy_ranking_by_game_count.png differ
+
+commit 20226a474fa691055031ee86eabcd487b2149365
+Author: Tim Trojner <tim.trojner@gmail.com>
+Date:   Thu Apr 10 13:06:36 2025 +0200
+
+    turnament results in readme
+
+diff --git a/README.md b/README.md
+index 5eefe2f..a9f59f5 100644
+--- a/README.md
++++ b/README.md
+@@ -108,3 +108,49 @@ Prikaz s pomočjo tabele:
+ | ------------- | ----------------------------- | ---------------------------- |
+ | **On molči**  | **Jaz** 1 leto, **On** 1 leto | **Jaz** 0 let, **On** 10 let |
+ | **On prizna** | **Jaz** 10 let, **On** 0 let  | **Jaz** 5 let, **On** 5 let  |
++
++
++# Prisoner's Dilemma Tournament Results
++
++## Match Results
++
++| Match | Score |
++|-------|-------|
++| Random vs TitForTat | 292 - 292 |
++| Random vs AlwaysDefect | 770 - 230 |
++| Random vs JOSS | 304 - 304 |
++| Random vs Tester | 280 - 280 |
++| TitForTat vs Random | 408 - 408 |
++| TitForTat vs AlwaysDefect | 505 - 495 |
++| TitForTat vs JOSS | 497 - 487 |
++| TitForTat vs Tester | 501 - 491 |
++| AlwaysDefect vs Random | 275 - 725 |
++| AlwaysDefect vs TitForTat | 500 - 500 |
++| AlwaysDefect vs JOSS | 500 - 500 |
++| AlwaysDefect vs Tester | 495 - 505 |
++| JOSS vs Random | 368 - 408 |
++| JOSS vs TitForTat | 496 - 496 |
++| JOSS vs AlwaysDefect | 505 - 495 |
++| JOSS vs Tester | 501 - 491 |
++| Tester vs Random | 413 - 403 |
++| Tester vs TitForTat | 496 - 496 |
++| Tester vs AlwaysDefect | 505 - 495 |
++| Tester vs JOSS | 496 - 496 |
++
++## Results Table (lower score is better)
++
++|              | Random | TitForTat | AlwaysDefect | JOSS  | Tester |
++|--------------|--------|-----------|--------------|-------|--------|
++| Random       | 0.0    | 292.0     | 770.0        | 304.0 | 280.0  |
++| TitForTat    | 408.0  | 0.0       | 505.0        | 497.0 | 501.0  |
++| AlwaysDefect | 275.0  | 500.0     | 0.0          | 500.0 | 495.0  |
++| JOSS         | 368.0  | 496.0     | 505.0        | 0.0   | 501.0  |
++| Tester       | 413.0  | 496.0     | 505.0        | 496.0 | 0.0    |
++
++## Ranking (Average Score)
++
++1. **Random**: 329.20
++2. **AlwaysDefect**: 354.00
++3. **JOSS**: 374.00
++4. **Tester**: 382.00
++5. **TitForTat**: 382.20
+\ No newline at end of file
+
+commit d0bf9090dda483ad1ec7ed01b7bcdc989155cc6a
+Author: Tim Trojner <tim.trojner@gmail.com>
+Date:   Thu Apr 10 13:06:17 2025 +0200
+
+    venv tournament and restults
+
+diff --git a/src/__pycache__/playground.cpython-313.pyc b/src/__pycache__/playground.cpython-313.pyc
+new file mode 100644
+index 0000000..80b335a
+Binary files /dev/null and b/src/__pycache__/playground.cpython-313.pyc differ
+diff --git a/src/main.py b/src/main.py
+index 121a26c..4568038 100644
+--- a/src/main.py
++++ b/src/main.py
+@@ -3,26 +3,58 @@ from players.t4t import TIT_FOR_TAT
+ from players.all_d import ALL_D
+ from players.joss import JOSS
+ from players.tester import Tester
+-
+ from playground import PlayGround
++import pandas as pd
++import numpy as np
+ 
+-def main():
+-    print("Welcome to the Prisoner's Dilemma!")
+-    results = []
+-    player1 = Random()
+-    player2 = ALL_D()
+-    game = PlayGround(player1, player2, "Random1", "Random2", num_games=100)
+-    game.run()
+-    results.append((game.score_player1, game.score_player2))
+-    print(f"Player 1 ({game.player1_name}) score: {game.score_player1}")
+-    print(f"Player 2 ({game.player2_name}) score: {game.score_player2}")
++def run_tournament(show_individual_games=False):
++    print("Welcome to the Prisoner's Dilemma Tournament!")
++    
++    # Define all strategies
++    strategies = [
++        (Random(), "Random"),
++        (TIT_FOR_TAT(), "TitForTat"),
++        (ALL_D(), "AlwaysDefect"),
++        (JOSS(), "JOSS"),
++        (Tester(), "Tester")
++    ]
++    
++    # Create results matrix
++    num_strategies = len(strategies)
++    results = np.zeros((num_strategies, num_strategies))
++    
++    # Run tournament
++    for i, (player1, name1) in enumerate(strategies):
++        for j, (player2, name2) in enumerate(strategies):
++            if i != j:  # Don't play against self (or optionally do with i <= j)
++                # Reset players before each match
++                player1.reset()
++                player2.reset()
++                
++                # Run the match
++                game = PlayGround(player1, player2, name1, name2, num_games=100)
++                game.run(show_choices_and_results=show_individual_games)
++                
++                # Store results (lower score is better)
++                results[i, j] = game.score_player1
++                
++                print(f"{name1} vs {name2}: {game.score_player1} - {game.score_player2}")
++    
++    # Create and display results table
++    strategy_names = [name for _, name in strategies]
++    results_df = pd.DataFrame(results, index=strategy_names, columns=strategy_names)
++    
++    print("\nResults Table (lower score is better):")
++    print(results_df)
++    
++    # Calculate average performance
++    average_scores = results_df.mean(axis=1).sort_values()
++    print("\nRanking (Average Score):")
++    for rank, (name, score) in enumerate(average_scores.items(), 1):
++        print(f"{rank}. {name}: {score:.2f}")
+ 
+-    if game.score_player1 < game.score_player2:
+-        print(f"{game.player1_name} wins!")
+-    elif game.score_player2 < game.score_player1:
+-        print(f"{game.player2_name} wins!")
+-    else:
+-        print("It's a tie!")
++def main():
++    run_tournament(show_individual_games=False)  # Set to True to see each move
+ 
+ if __name__ == "__main__":
+     main()
+\ No newline at end of file
+diff --git a/src/players/__pycache__/all_d.cpython-313.pyc b/src/players/__pycache__/all_d.cpython-313.pyc
+new file mode 100644
+index 0000000..8b66c5e
+Binary files /dev/null and b/src/players/__pycache__/all_d.cpython-313.pyc differ
+diff --git a/src/players/__pycache__/base_player.cpython-313.pyc b/src/players/__pycache__/base_player.cpython-313.pyc
+new file mode 100644
+index 0000000..09e03a9
+Binary files /dev/null and b/src/players/__pycache__/base_player.cpython-313.pyc differ
+diff --git a/src/players/__pycache__/joss.cpython-313.pyc b/src/players/__pycache__/joss.cpython-313.pyc
+new file mode 100644
+index 0000000..3b6f130
+Binary files /dev/null and b/src/players/__pycache__/joss.cpython-313.pyc differ
+diff --git a/src/players/__pycache__/random_player.cpython-313.pyc b/src/players/__pycache__/random_player.cpython-313.pyc
+new file mode 100644
+index 0000000..f7398c4
+Binary files /dev/null and b/src/players/__pycache__/random_player.cpython-313.pyc differ
+diff --git a/src/players/__pycache__/t4t.cpython-313.pyc b/src/players/__pycache__/t4t.cpython-313.pyc
+new file mode 100644
+index 0000000..b2e2420
+Binary files /dev/null and b/src/players/__pycache__/t4t.cpython-313.pyc differ
+diff --git a/src/players/__pycache__/tester.cpython-313.pyc b/src/players/__pycache__/tester.cpython-313.pyc
+new file mode 100644
+index 0000000..a701fdc
+Binary files /dev/null and b/src/players/__pycache__/tester.cpython-313.pyc differ
+
+commit 0911941bfd95b94c7af1bf6c49dde274f2aff1b7
+Author: Tim Trojner <tim.trojner@gmail.com>
+Date:   Thu Apr 10 12:46:32 2025 +0200
+
+    fix player imports and remove np
+
+diff --git a/src/main.py b/src/main.py
+index b3d8dcf..121a26c 100644
+--- a/src/main.py
++++ b/src/main.py
+@@ -1,7 +1,8 @@
+-import numpy as np
+ from players.random_player import Random
+-from players.random_player import TIT_FOR_TAT
+-from players.random_player import ALL_D
++from players.t4t import TIT_FOR_TAT
++from players.all_d import ALL_D
++from players.joss import JOSS
++from players.tester import Tester
+ 
+ from playground import PlayGround
+ 
+
+commit cf7a2f1a7263d1b0cee1517d436f33a332ce457d
+Author: Tim Trojner <tim.trojner@gmail.com>
+Date:   Thu Apr 10 12:33:34 2025 +0200
+
+    refactor players :recycle:

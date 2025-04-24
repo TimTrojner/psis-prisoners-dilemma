@@ -4,8 +4,52 @@ from players.all_d import ALL_D
 from players.niceguy import NICE_GUY
 from players.joss import JOSS
 from players.tester import Tester
+from players.qlearning_player import QLearningPlayer
 from playground import PlayGround
 import matplotlib.pyplot as plt
+
+def train_q_table(num_training_games=500000):
+    """Nauči Q-tabelo skozi veliko število iger in jo vrne"""
+    print("Treniram Q-tabelo...")
+    
+    # Ustvari Q-Learning igralca z nižjo stopnjo raziskovanja za treniranje
+    qlearner = QLearningPlayer(
+        learning_rate=0.2, 
+        discount_factor=0.99, 
+        exploration_rate=0.3,  # Višja vrednost za več raziskovanja med učenjem
+        history_length=3
+    )
+    
+    # Seznam strategij za trening
+    training_strategies = [
+        (TIT_FOR_TAT(), "TitForTat"),
+        (ALL_D(), "AlwaysDefect"),
+        (Random(), "Random"),
+        (JOSS(), "JOSS"),
+        (Tester(), "Tester")
+    ]
+    
+    # Treniraj proti vsaki strategiji
+    for strategy, name in training_strategies:
+        print(f"  - Treniram proti {name}...")
+        games_per_strategy = num_training_games // len(training_strategies)
+        
+        for _ in range(games_per_strategy):
+            # Ponastavi nasprotnikovo zgodovino
+            strategy.__init__()
+            qlearner.past_actions = []
+            qlearner.num_games = 0
+            qlearner.last_state = None
+            qlearner.last_action = None
+            
+            # Igraj eno igro s 100 potezami
+            playground = PlayGround(qlearner, strategy, "QLearn", name, 100)
+            playground.run(show_choices_and_results=False)
+    
+    print(f"Učenje končano! Q-tabela vsebuje {len(qlearner.q_table)} stanj.")
+    return qlearner.q_table
+
+pretrained_q_table = train_q_table(num_training_games=500000)
 
 def tournament_round(strategies, num_games, show_individual_games=False):
    
@@ -32,8 +76,21 @@ def tournament_round(strategies, num_games, show_individual_games=False):
                 print(f"Game {game_count}: {name1} vs {name2} ({num_games} rounds)")
             
             # Reset strategy histories
-            strategy1.__init__()
-            strategy2.__init__()
+            if name1 == "QLearn":
+                strategy1.past_actions = []
+                strategy1.num_games = 0
+                strategy1.last_state = None
+                strategy1.last_action = None
+            else:
+                strategy1.reset()
+
+            if name2 == "QLearn":
+                strategy2.past_actions = []
+                strategy2.num_games = 0
+                strategy2.last_state = None
+                strategy2.last_action = None
+            else:
+                strategy2.reset()
             
             # Create and run the game
             playground = PlayGround(
@@ -100,6 +157,16 @@ def run_tournament(show_individual_games=False):
     Run multiple tournaments with different numbers of games and analyze the results
     """
     print("Welcome to the Prisoner's Dilemma Tournament!")
+
+
+        # Ustvari igralca z natrenirano tabelo in nižjo stopnjo raziskovanja
+    qlearner = QLearningPlayer(
+        learning_rate=0.05,  # Nižja vrednost za stabilnejše učenje
+        discount_factor=0.99, 
+        exploration_rate=0.05,  # Nižja vrednost - manj naključnosti v turnirju
+        history_length=3,
+        pretrained_q_table=pretrained_q_table
+    )
     
     # Define all strategies
     strategies = [
@@ -108,6 +175,7 @@ def run_tournament(show_individual_games=False):
         (ALL_D(), "AlwaysDefect"),
         (JOSS(), "JOSS"),
         (Tester(), "Tester"),
+        (qlearner, "QLearn"),
         (NICE_GUY(), "NiceGuy")
     ]
     
@@ -131,6 +199,7 @@ def run_tournament(show_individual_games=False):
         
         for t in range(num_tournaments):
             print(f"Tournament {t+1}/{num_tournaments}")
+
             
             # Create a fresh copy of strategies for each tournament
             fresh_strategies = [
@@ -139,7 +208,8 @@ def run_tournament(show_individual_games=False):
                 (ALL_D(), "AlwaysDefect"),
                 (JOSS(), "JOSS"),
                 (Tester(), "Tester"),
-                 (NICE_GUY(), "NiceGuy")
+                (qlearner, "QLearn"),
+                (NICE_GUY(), "NiceGuy")
             ]
             
             scores, details, strategy_scores_by_game = tournament_round(
@@ -198,7 +268,8 @@ def visualize_tournament_results(all_tournament_scores, all_tournament_details):
         'AlwaysDefect': 'red',
         'JOSS': 'purple',
         'Tester': 'orange',
-        'NiceGuy': 'yellow'
+        'NiceGuy': 'yellow',
+        'QLearn': 'cyan'
     }
     
     # Extract data for plotting
