@@ -3,6 +3,7 @@ from players.t4t import TIT_FOR_TAT
 from players.all_d import ALL_D
 from players.niceguy import NICE_GUY
 from players.joss import JOSS
+from players.grudgeHolder import GrudgeHolder
 from players.tester import Tester
 from playground import PlayGround
 import matplotlib.pyplot as plt
@@ -108,7 +109,8 @@ def run_tournament(show_individual_games=False):
         (ALL_D(), "AlwaysDefect"),
         (JOSS(), "JOSS"),
         (Tester(), "Tester"),
-        (NICE_GUY(), "NiceGuy")
+        (NICE_GUY(), "NiceGuy"),
+        (GrudgeHolder(), "GrudgeHolder")
     ]
     
     # Run a range of small and large tournament sizes
@@ -139,7 +141,8 @@ def run_tournament(show_individual_games=False):
                 (ALL_D(), "AlwaysDefect"),
                 (JOSS(), "JOSS"),
                 (Tester(), "Tester"),
-                 (NICE_GUY(), "NiceGuy")
+                (NICE_GUY(), "NiceGuy"),
+                (GrudgeHolder(), "GrudgeHolder")
             ]
             
             scores, details, strategy_scores_by_game = tournament_round(
@@ -198,7 +201,8 @@ def visualize_tournament_results(all_tournament_scores, all_tournament_details):
         'AlwaysDefect': 'red',
         'JOSS': 'purple',
         'Tester': 'orange',
-        'NiceGuy': 'yellow'
+        'NiceGuy': 'yellow',
+        'GrudgeHolder': 'cyan'
     }
     
     # Extract data for plotting
