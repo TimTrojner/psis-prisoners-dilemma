@@ -27,7 +27,8 @@ def train_q_table(num_training_games=500000):
         (ALL_D(), "AlwaysDefect"),
         (Random(), "Random"),
         (JOSS(), "JOSS"),
-        (Tester(), "Tester")
+        (Tester(), "Tester"),
+        (GrudgeHolder(), "GrudgeHolder")
     ]
     
     # Treniraj proti vsaki strategiji
@@ -210,7 +211,9 @@ def run_tournament(show_individual_games=False):
                 (ALL_D(), "AlwaysDefect"),
                 (JOSS(), "JOSS"),
                 (Tester(), "Tester"),
-                 (NICE_GUY(), "NiceGuy")
+                (NICE_GUY(), "NiceGuy"),
+                (qlearner, "QLearn"), 
+                (GrudgeHolder(), "GrudgeHolder")
             ]
             
             scores, details, strategy_scores_by_game = tournament_round(
@@ -269,7 +272,9 @@ def visualize_tournament_results(all_tournament_scores, all_tournament_details):
         'AlwaysDefect': 'red',
         'JOSS': 'purple',
         'Tester': 'orange',
-        'NiceGuy': 'yellow'
+        'NiceGuy': 'yellow',
+        'QLearn': 'cyan',
+        'GrudgeHolder': 'pink'
     }
     
     # Extract data for plotting
