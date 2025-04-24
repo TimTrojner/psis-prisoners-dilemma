@@ -6,6 +6,7 @@ from players.joss import JOSS
 from players.grudgeHolder import GrudgeHolder
 from players.tester import Tester
 from players.qlearning_player import QLearningPlayer
+from players.adaptiveTit4Tat import AdaptiveTitForTat
 from playground import PlayGround
 import matplotlib.pyplot as plt
 
@@ -28,7 +29,8 @@ def train_q_table(num_training_games=500000):
         (Random(), "Random"),
         (JOSS(), "JOSS"),
         (Tester(), "Tester"),
-        (GrudgeHolder(), "GrudgeHolder")
+        (GrudgeHolder(), "GrudgeHolder"),
+        (AdaptiveTitForTat(), "AdaptiveTitForTat")
     ]
     
     # Treniraj proti vsaki strategiji
@@ -179,7 +181,9 @@ def run_tournament(show_individual_games=False):
         (Tester(), "Tester"),
         (qlearner, "QLearn"),
         (NICE_GUY(), "NiceGuy"),
-        (GrudgeHolder(), "GrudgeHolder")
+        (GrudgeHolder(), "GrudgeHolder"),
+        (AdaptiveTitForTat(), "AdaptiveTitForTat")
+
     ]
     
     # Run a range of small and large tournament sizes
@@ -213,7 +217,9 @@ def run_tournament(show_individual_games=False):
                 (Tester(), "Tester"),
                 (NICE_GUY(), "NiceGuy"),
                 (qlearner, "QLearn"), 
-                (GrudgeHolder(), "GrudgeHolder")
+                (GrudgeHolder(), "GrudgeHolder"),
+                (AdaptiveTitForTat(), "AdaptiveTitForTat")
+
             ]
             
             scores, details, strategy_scores_by_game = tournament_round(
@@ -274,7 +280,8 @@ def visualize_tournament_results(all_tournament_scores, all_tournament_details):
         'Tester': 'orange',
         'NiceGuy': 'yellow',
         'QLearn': 'cyan',
-        'GrudgeHolder': 'pink'
+        'GrudgeHolder': 'pink',
+        'AdaptiveTitForTat': 'black'
     }
     
     # Extract data for plotting
