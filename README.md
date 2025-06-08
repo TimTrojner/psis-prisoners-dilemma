@@ -107,8 +107,8 @@ Prikaz s pomočjo tabele:
 
 |               | Jaz molčim                    | Jaz priznam                  |
 | ------------- | ----------------------------- | ---------------------------- |
-| **On molči**  | **Jaz** 1 leto, **On** 1 leto | **Jaz** 0 let, **On** 10 let |
-| **On prizna** | **Jaz** 10 let, **On** 0 let  | **Jaz** 5 let, **On** 5 let  |
+| **On molči**  | **Jaz** 1 leto, **On** 1 leto | **Jaz** 20 let, **On** 0 let |
+| **On prizna** | **Jaz** 0 let, **On** 20 let  | **Jaz** 5 let, **On** 5 let  |
 
 # Projekt 9 – Implementacija igre Iterativna zapornikova dilema
 
@@ -116,7 +116,7 @@ Prikaz s pomočjo tabele:
 
 ## Povzetek
 
-Ta projekt se osredotoča na implementacijo in analizo različnih strategij v kontekstu ponavljajoče se Zapornikove dileme. Razvit je bil simulacijski model v programskem jeziku Python, ki omogoča medsebojno tekmovanje implementiranih strategij, vključno s klasičnimi strategijami, kot so Tit-for-Tat, Always Defect, Random, JOSS, Tester, ter naprednejšimi, kot sta Q-Learning igralec in Adaptive Tit-for-Tat. Cilj projekta je bil preučiti dinamiko interakcij med strategijami skozi turnirje z različnim številom iteracij in identificirati dejavnike, ki prispevajo k njihovi uspešnosti. Poročilo opisuje teoretično ozadje, metodologijo razvoja programske rešitve, predstavitev implementiranih strategij ter analizo rezultatov simulacij, vključno z vizualizacijami uspešnosti.
+Ta projekt se osredotoča na implementacijo in analizo različnih strategij v kontekstu ponavljajoče se Zapornikove dileme. Razvit je bil simulacijski model v programskem jeziku Python, ki omogoča medsebojno tekmovanje implementiranih strategij, vključno s klasičnimi strategijami, kot so Tit-for-Tat, Always Defect, Random, JOSS, Tester, ter naprednejšimi, kot sta Q-Learning igralec, Adaptive Tit-for-Tat ter Grudge Holder. Cilj projekta je bil preučiti dinamiko interakcij med strategijami skozi turnirje z različnim številom iteracij in identificirati dejavnike, ki prispevajo k njihovi uspešnosti. Poročilo opisuje teoretično ozadje, metodologijo razvoja programske rešitve, predstavitev implementiranih strategij ter analizo rezultatov simulacij, vključno z vizualizacijami uspešnosti.
 
 ## Uvod
 
@@ -165,7 +165,7 @@ Implementirali smo naslednje strategije:
 - **JOSS (`JOSS`)**: Podobna Tit-for-Tat, vendar z majhno verjetnostjo izda, tudi če bi sicer sodelovala.
 - **Tester (`Tester`)**: Začne z izdajo, nato sodeluje. Če nasprotnik kaznuje, preklopi na Tit-for-Tat, sicer ga izkorišča.
 - **Nice Guy (`NICE_GUY`)**: Vedno sodeluje (podobno AlwaysCooperate).
-- **Grudge Holder (`GrudgeHolder`)**: Sodeluje, dokler nasprotnik ne izda. Po prvi izdaji nasprotnika vedno izda.
+- **Grudge Holder (`GrudgeHolder`)**: Sodeluje, dokler nasprotnik ne izda. Po prvi izdaji nasprotnika začne "držati zamero" in izda v naslednjih nekaj krogih (trajanje zamere je nastavljivo). Po izteku zamere ponudi odpuščanje s sodelovanjem; če nasprotnik sprejme (sodeluje), se strategija vrne k sodelovanju, sicer ponovno začne držati zamero. Ta strategija omogoča kaznovanje izdaje, a tudi možnost odpuščanja, če nasprotnik spremeni vedenje.
 - **Adaptive Tit for Tat (`AdaptiveTitForTat`)**: Prilagodljiva različica Tit-for-Tat, ki lahko spreminja svoje obnašanje.
 - **Q-Learning Player (`QLearningPlayer`)**: Igralec, ki se uči optimalne strategije s pomočjo Q-učenja. Uporablja pretekle poteze (stanje) za odločanje in posodablja svojo Q-tabelo na podlagi prejetih nagrad.
 
@@ -177,13 +177,12 @@ Posebna pozornost je bila namenjena implementaciji Q-Learning igralca. Ta igrale
 
 Simulacijski pogon (`tournament_round` in `run_tournament` v `main.py`) omogoča izvedbo turnirjev, kjer vsaka strategija igra proti vsaki drugi strategiji določeno število iger (krogov). Izvajamo turnirje z različnim številom iger na dvoboj (npr. 5, 10, 50, 100, 500, 1000, 10000 iger), da opazujemo, kako dolžina interakcije vpliva na uspešnost strategij. Za zmanjšanje vpliva naključnosti se rezultati povprečijo čez več ponovitev celotnega turnirja.
 
-### Matrika Izplačil
+Standardna matrika izplačil (kazni v letih zapora, nižje je bolje) za igro je definirana tako:
 
-Standardna matrika izplačil (kazni v letih zapora, nižje je bolje) za igro je implicitno definirana v `playground.py`:
-
-- Oba sodelujeta: 1 leto zapora za vsakega.
-- Oba izdata: 3 leta zapora za vsakega.
-- Eden sodeluje, drugi izda: Tisti, ki sodeluje, dobi 5 let, izdajalec 0 let.
+|               | Jaz molčim                    | Jaz priznam                  |
+| ------------- | ----------------------------- | ---------------------------- |
+| **On molči**  | **Jaz** 1 leto, **On** 1 leto | **Jaz** 20 let, **On** 0 let |
+| **On prizna** | **Jaz** 0 let, **On** 20 let  | **Jaz** 5 let, **On** 5 let  |
 
 ### Vizualizacija Rezultatov
 
@@ -215,16 +214,22 @@ Iz `main.py` je razvidno, da se generirajo naslednje vizualizacije, ki omogočaj
 1.  **`strategy_performance_by_game_count.png`**: Prikazuje povprečno zaporno kazen za vsako strategijo v odvisnosti od števila iger v dvoboju. To omogoča vpogled, katere strategije so boljše v krajših ali daljših interakcijah.
     ![Strategija uspešnosti glede na število iger](strategy_performance_by_game_count.png)  
     _Slika 1: Povprečna zaporna kazen za vsako strategijo v odvisnosti od števila iger v dvoboju._
+
 2.  **`cumulative_score_{num_games}_games.png`**: Za izbrane dolžine dvobojev (npr. 10, 100, 1000 iger) prikazuje kumulativno zaporno kazen med potekom dvoboja. To lahko razkrije dinamiko med strategijami.
     ![Kumulativna kazen za 50 iger](cumulative_score_50_games.png)  
     _Slika 2: Kumulativna zaporna kazen med potekom dvoboja za 50 iger._
 
-![Kumulativna kazen za 10000 iger](cumulative_score_1000_games.png)  
-_Slika 3: Kumulativna zaporna kazen med potekom dvoboja za 10000 iger._ 3. **`strategy_ranking_by_game_count.png`**: Prikazuje rang vsake strategije (1 = najboljša) glede na število iger v dvoboju, kar olajša primerjavo relativne uspešnosti.
-![Strategija rangiranja glede na število iger](strategy_ranking_by_game_count.png)  
- _Slika 4: Rangiranje strategij v odvisnosti od števila iger v dvoboju._ 4. **`strategy_comparison_{num_games}_games.png`**: Stolpčni diagrami, ki primerjajo uspešnost strategij za specifične dolžine dvobojev (npr. 10, 100, 10000 iger).
-![Primerjava strategij za 100 iger](strategy_comparison_10000_games.png)  
-_Slika 5: Primerjava uspešnosti strategij za 10000 iger v dvoboju._ 5. **`normalized_scores_by_game_count.png`**: Prikazuje povprečno zaporno kazen na eno igro, kar normalizira rezultate glede na dolžino dvoboja. 6. **`strategy_convergence.png`**: Prikazuje, kako se uspešnost posamezne strategije spreminja z naraščajočim številom iger v dvoboju, kar lahko nakazuje na konvergenco k stabilni uspešnosti.
+    ![Kumulativna kazen za 10000 iger](cumulative_score_1000_games.png)  
+    _Slika 3: Kumulativna zaporna kazen med potekom dvoboja za 10000 iger._
+
+3.  **`strategy_ranking_by_game_count.png`**: Prikazuje rang vsake strategije (1 = najboljša) glede na število iger v dvoboju, kar olajša primerjavo relativne uspešnosti.
+    ![Strategija rangiranja glede na število iger](strategy_ranking_by_game_count.png)  
+    _Slika 4: Rangiranje strategij v odvisnosti od števila iger v dvoboju._
+4.  **`strategy_comparison_{num_games}_games.png`**: Stolpčni diagrami, ki primerjajo uspešnost strategij za specifične dolžine dvobojev (npr. 10, 100, 10000 iger).
+    ![Primerjava strategij za 100 iger](strategy_comparison_10000_games.png)  
+    _Slika 5: Primerjava uspešnosti strategij za 10000 iger v dvoboju._ 5. **`normalized_scores_by_game_count.png`**: Prikazuje povprečno zaporno kazen na eno igro, kar normalizira rezultate glede na dolžino dvoboja.
+    ![Normalizirane povprečne kazni po številu iger](normalized_scores_by_game_count.png)  
+     _Slika 6: Normalizirane povprečne kazni strategij glede na število iger v dvoboju._
 
 Na splošno se pričakuje, da bodo strategije, ki spodbujajo sodelovanje, a hkrati kaznujejo izdajo (kot TitForTat ali prilagodljive strategije), dolgoročno uspešne. Q-Learning agent ima potencial, da se nauči zelo učinkovite strategije, odvisno od kakovosti treninga in kompleksnosti okolja.
 
